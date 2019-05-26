@@ -13,24 +13,29 @@ class Application(Frame):
         if file:
             data = pd.read_csv(file)
             file.close()
-            print(data)
             self.FileLabel['text'] = file.name
+            print(data)
 
     def StatusBar(self):
         pass
 
     def BrowseWidgets(self):
         self.BrowseLabel = Label(self,
-                                text = 'Choose your CSV file: ' )
+                                text = 'Choose your CSV file: ')
         self.Browse = Button(self,
                             text = "Browse ...",
                             command = self.OpenFile)
-
-        self.BrowseLabel.pack(side = LEFT)
-        self.Browse.pack(side = LEFT)
-
         self.FileLabel = Label(self)
-        self.FileLabel.pack()
+
+        self.BrowseLabel.grid(row = 0, column = 0, columnspan = 2)
+        self.Browse.grid(row = 0, column = 2)
+        self.FileLabel.grid(row = 1, column = 0,columnspan = 3)
+
+    def GenerateWidget(self):
+        self.Generate = Button(self,
+                                text = 'Generate HTML')
+
+        self.Generate.grid(row = 2, column = 0, columnspan = 2)
 
     def QuitWidget(self):
         self.QUIT = Button(self,
@@ -38,12 +43,13 @@ class Application(Frame):
                             fg = 'red',
                             command = self.quit)
 
-        self.QUIT.pack(side = BOTTOM)
+        self.QUIT.grid(row = 2, column = 2, columnspan = 2)
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.pack()
         self.BrowseWidgets()
+        self.GenerateWidget()
         self.QuitWidget()
 
 root = Tk()
