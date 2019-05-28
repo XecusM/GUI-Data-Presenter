@@ -316,8 +316,8 @@ class GenerateFrame(Frame):
             Yvalue = graph.Yvalue.get()
             # create options for handler script to create results file
             GraphOptions = {'type':Gvalue,
-                            'x':['X','D'],
-                            'y':'Y',
+                            'x':[Xvalue],
+                            'y':Yvalue,
                             'title':Tvalue,
                             'Xtitle':Xvalue,
                             'Ytitle':Yvalue,
