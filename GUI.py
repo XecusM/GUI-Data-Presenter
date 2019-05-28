@@ -5,7 +5,7 @@ import pandas as pd
 import handler
 import os
 
-class TopFrame(Frame):
+class BrowseFrame(Frame):
 
     def OpenFile(self):
         file = filedialog.askopenfile(parent=root,
@@ -17,7 +17,7 @@ class TopFrame(Frame):
             data = pd.read_csv(file)
             file.close()
             self.FileLabel['text'] = filename
-            axis.AxisSelection(data,True)
+            graph.AxisSelection(data,True)
             generate.Generate.config(state = 'normal')
             self.FileLabel.bind('<Enter>',self.FileEnter)
             self.FileLabel.bind('<Leave>',self.OnLeave)
@@ -57,7 +57,7 @@ class TopFrame(Frame):
         self.pack()
         self.BrowseWidgets()
 
-class AxisFrame(Frame):
+class GraphFrame(Frame):
 
     def GraphSelection(self):
         self.Glabel = Label(self,
@@ -192,7 +192,7 @@ class GenerateFrame(Frame):
         self.QUIT.pack(side = LEFT, padx = 10, pady = 10)
 
     def CreateGraph(self):
-        if axis.Tentry.get():
+        if graph.Tentry.get():
             self.Generate.config(state = 'disabled')
             self.Generate.pack(side = LEFT, padx = 10, pady = 10)
             filename = filedialog.asksaveasfilename(
@@ -200,10 +200,10 @@ class GenerateFrame(Frame):
                                         defaultextension=".html",
                                         filetypes=[('HTML files', '.html')],
                                         title="Choose location")
-            Tvalue = axis.Tentry.get()
-            Gvalue = axis.Gvalue.get()
-            Xvalue = axis.Xvalue.get()
-            Yvalue = axis.Yvalue.get()
+            Tvalue = graph.Tentry.get()
+            Gvalue = graph.Gvalue.get()
+            Xvalue = graph.Xvalue.get()
+            Yvalue = graph.Yvalue.get()
             GraphOptions = {'type':Gvalue,
                             'x':['X','D'],
                             'y':'Y',
@@ -212,7 +212,8 @@ class GenerateFrame(Frame):
                             'Ytitle':Yvalue,
                             'file':filename}
             # call function to export the html file
-            handler.GraphSetting(axis.data,GraphOptions)
+            handler.GraphSetting(graph.data,GraphOptions)
+            status.status['text'] = 'Graph has been exported successfully'
             self.Generate.config(state = 'normal')
             self.Generate.pack(side = LEFT)
         else:
@@ -255,8 +256,8 @@ root.title('Data Presenter')
 root.geometry("400x210")
 root.resizable(0, 0)
 
-top = TopFrame(master=root)
-axis = AxisFrame(master=root)
+browse = BrowseFrame(master=root)
+graph = GraphFrame(master=root)
 generate = GenerateFrame(master=root)
 status = StatusFrame(master=root)
 
