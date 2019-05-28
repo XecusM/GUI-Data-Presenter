@@ -14,7 +14,7 @@ def GraphSetting(ImportedData,GraphOptions):
     # intiate graph data list
     data = list()
     # create html scatter graph
-    if GraphOptions['type'] == 'scatter':
+    if GraphOptions['type'] == 'Scatter':
         # create data for the desired graph
         for x in GraphOptions['x']:
             # create trace for graph data
@@ -33,9 +33,9 @@ def GraphSetting(ImportedData,GraphOptions):
             hovermode ='closest')
         # create the figure for graph ploting
         fig = go.Figure(data=data, layout=layout)
-        pyo.plot(fig, filename='results.html')
+        pyo.plot(fig, filename=GraphOptions['file'])
     # create html line graph
-    elif GraphOptions['type'] == 'line':
+    elif GraphOptions['type'] == 'Line':
         # create data for the desired graph
         for x in GraphOptions['x']:
             # create trace for graph data
@@ -55,9 +55,9 @@ def GraphSetting(ImportedData,GraphOptions):
         # create the figure for graph ploting
         fig = go.Figure(data=data, layout=layout)
         # export the html file
-        pyo.plot(fig, filename='results.html')
+        pyo.plot(fig, filename=GraphOptions['file'])
     # create html bar chart
-    elif GraphOptions['type'] == 'bar':
+    elif GraphOptions['type'] == 'Bar':
         # create data for the desired graph
         for x in GraphOptions['x']:
             # create trace for graph data
@@ -76,9 +76,9 @@ def GraphSetting(ImportedData,GraphOptions):
         # create the figure for graph ploting
         fig = go.Figure(data=data, layout=layout)
         # export the html file
-        pyo.plot(fig, filename='results.html')
+        pyo.plot(fig, filename=GraphOptions['file'])
     # create histogram chart
-    elif GraphOptions['type'] == 'histogram':
+    elif GraphOptions['type'] == 'Histogram':
         # create data for the desired graph
         for x in GraphOptions['x']:
             # create trace for graph data
@@ -95,7 +95,7 @@ def GraphSetting(ImportedData,GraphOptions):
         # create the figure for graph ploting
         fig = go.Figure(data=data, layout=layout)
         # export the html file
-        pyo.plot(fig, filename='results.html')
+        pyo.plot(fig, filename=GraphOptions['file'])
     else:
         # an error message if type not recognized
         message = 'Graph type not recognized'
@@ -112,12 +112,13 @@ def main():
     # import data from csv file
     ImportedData = pd.read_csv('test_data.csv')
     # apply settings for graph options
-    GraphOptions = {'type':'scatter',
+    GraphOptions = {'type':'Scatter',
                     'x':['X','D'],
                     'y':'Y',
                     'title':'test graph',
                     'Xtitle':'X axis',
-                    'Ytitle':'Y axis'}
+                    'Ytitle':'Y axis',
+                    'file':'results.html'}
     # call function to export the html file
     GraphSetting(ImportedData,GraphOptions)
 
