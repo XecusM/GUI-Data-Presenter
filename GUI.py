@@ -19,32 +19,35 @@ class TopFrame(Frame):
             self.FileLabel['text'] = filename
             axis.AxisSelection(data,True)
             generate.Generate.config(state = 'normal')
+            self.FileLabel.bind('<Enter>',self.FileEnter)
+            self.FileLabel.bind('<Leave>',self.OnLeave)
             generate.Generate.pack(side = LEFT)
 
     def BrowseWidgets(self):
         self.BrowseLabel = Label(self,
                                 text = 'Choose your CSV file: ',
-                                anchor = W)
+                                width = 18)
         self.Browse = Button(self,
                             text = "Browse ...",
                             command = self.OpenFile,
-                            anchor = W)
+                            width = 10)
         self.FileLabel = Label(self,
                             text = '  ',
-                            anchor = E)
+                            anchor = NE,
+                            width = 18)
 
-        # self.BrowseLabel.grid(row = 0, column = 0, columnspan = 2)
-        # self.Browse.grid(row = 0, column = 2)
-        # self.FileLabel.grid(row = 1, column = 0,columnspan = 3)
         self.BrowseLabel.pack(side = LEFT)
-        self.Browse.pack(side = LEFT)
-        self.FileLabel.pack(side = LEFT)
+        self.Browse.pack(side = LEFT, padx = 10, pady = 10)
+        self.FileLabel.pack(side = LEFT, padx = 10, pady = 10)
 
         self.Browse.bind('<Enter>', self.BrowseEnter)
         self.Browse.bind('<Leave>', self.OnLeave)
 
     def BrowseEnter(self, event):
         status.status['text'] = 'Browse for csv file'
+
+    def FileEnter(self, event):
+        status.status['text'] = 'Imported File Name'
 
     def OnLeave(self, event):
         status.status['text'] = ' '
@@ -59,7 +62,7 @@ class AxisFrame(Frame):
     def GraphSelection(self):
         self.Glabel = Label(self,
                             text = 'Select Graph Type:',
-                            anchor = 'w')
+                            anchor = NW)
         self.Gvalue = StringVar(self)
         self.Gvalue.set('Scatter')
         self.Gmenu = OptionMenu(self,
@@ -67,25 +70,28 @@ class AxisFrame(Frame):
                                 'Scatter' ,
                                 'Line' ,
                                 'Bar',
-                                'Histogram' )
+                                'Histogram')
         self.Gmenu.bind('<Enter>',self.GmenuEnter)
         self.Gmenu.bind('<Leave>',self.OnLeave)
 
-        self.Glabel.grid(row = 1, column = 0, columnspan = 2)
-        self.Gmenu.grid(row = 2, column = 0, columnspan = 2)
+        self.Gmenu.configure(width = 10)
+        self.Glabel.grid(row = 1, column = 0, columnspan = 2,
+                        padx = 10, pady = 10)
+        self.Gmenu.grid(row = 2, column = 0, columnspan = 2,
+                        padx = 10)
 
     def AxisSelection(self,data=NONE,Active=False):
         self.Tlabel = Label(self,
                             text = 'Enter Title Name:',
-                            anchor = 'w')
-        self.Tentry = Entry(self)
+                            anchor = NE)
+        self.Tentry = Entry(self, width = 30)
         self.Xlabel = Label(self,
                             text = 'Select X axis:',
-                            anchor = 'w')
+                            anchor = NW)
         self.Xmenu = OptionMenu(self,' ',' ')
         self.Ylabel = Label(self,
                             text = 'Select Y axis:',
-                            anchor = 'w')
+                            anchor = NW)
         self.Ymenu = OptionMenu(self,' ',' ')
 
         self.Xmenu.bind('<Enter>',self.XmenuEnter)
@@ -95,33 +101,47 @@ class AxisFrame(Frame):
         self.Tentry.bind('<Enter>',self.TentryEnter)
         self.Tentry.bind('<Leave>',self.OnLeave)
 
+        self.Xmenu.configure(width = 10)
+        self.Ymenu.configure(width = 10)
         self.Xmenu.configure(state = 'disabled')
         self.Ymenu.configure(state = 'disabled')
-        self.Tlabel.grid(row = 0, column = 0, columnspan = 2)
-        self.Tentry.grid(row = 0, column = 2, columnspan = 2)
-        self.Xlabel.grid(row = 1, column = 2, columnspan = 2)
+
+        self.Tlabel.grid(row = 0, column = 0, columnspan = 2,
+                        padx = 10)
+        self.Tentry.grid(row = 0, column = 2, columnspan = 4)
+        self.Xlabel.grid(row = 1, column = 2, columnspan = 2,
+                        pady = 10)
         self.Xmenu.grid(row = 2, column = 2, columnspan = 2)
-        self.Ylabel.grid(row = 1, column = 4, columnspan = 2)
-        self.Ymenu.grid(row = 2, column = 4, columnspan = 2)
+        self.Ylabel.grid(row = 1, column = 4, columnspan = 2,
+                        padx = 10, pady = 10)
+        self.Ymenu.grid(row = 2, column = 4, columnspan = 2,
+                        padx = 10)
         if Active:
             choices = list()
             for value in data.columns:
                 choices.append(value)
             self.Xvalue = StringVar(self)
             self.Xvalue.set(choices[0])
-            self.Xmenu = OptionMenu(self,self.Xvalue,*choices)
+            self.Xmenu = OptionMenu(self, self.Xvalue, *choices)
             self.Yvalue = StringVar(self)
             self.Yvalue.set(choices[1])
-            self.Ymenu = OptionMenu(self,self.Yvalue,*choices)
+            self.Ymenu = OptionMenu(self, self.Yvalue, *choices)
+            self.Xmenu.configure(width = 10)
+            self.Ymenu.configure(width = 10)
             self.Xmenu.configure(state = 'active')
             self.Ymenu.configure(state = 'active')
-            self.Xlabel.grid(row = 1, column = 2, columnspan = 2)
+            self.Xmenu.bind('<Enter>',self.XmenuEnter)
+            self.Xmenu.bind('<Leave>',self.OnLeave)
+            self.Ymenu.bind('<Enter>',self.YmenuEnter)
+            self.Ymenu.bind('<Leave>',self.OnLeave)
+            self.Xlabel.grid(row = 1, column = 2, columnspan = 2,
+                            pady = 10)
             self.Xmenu.grid(row = 2, column = 2, columnspan = 2)
-            self.Ylabel.grid(row = 1, column = 4, columnspan = 2)
-            self.Ymenu.grid(row = 2, column = 4, columnspan = 2)
+            self.Ylabel.grid(row = 1, column = 4, columnspan = 2,
+                            padx = 10, pady = 10)
+            self.Ymenu.grid(row = 2, column = 4, columnspan = 2,
+                            padx = 10)
             self.data = data
-            print(choices)
-            print(data)
 
     def XmenuEnter(self, event):
         status.status['text'] = 'Select data for X axis'
@@ -149,32 +169,32 @@ class GenerateFrame(Frame):
     def GenerateWidget(self):
         self.Generate = Button(self,
                                 text = 'Generate HTML',
+                                fg = 'green',
                                 command = self.CreateGraph,
-                                anchor = E)
+                                width = 15)
         self.Generate.config(state = 'disabled')
 
         self.Generate.bind('<Enter>',self.GenerateEnter)
         self.Generate.bind('<Leave>',self.OnLeave)
-        # self.Generate.grid(row = 0, column = 2, columnspan = 2)
-        self.Generate.pack(side = LEFT)
+
+        self.Generate.pack(side = LEFT, padx = 10, pady = 10)
 
     def QuitWidget(self):
         self.QUIT = Button(self,
                             text = 'Quit',
                             fg = 'red',
                             command = self.quit,
-                            anchor = W)
+                            width = 15)
 
         self.QUIT.bind('<Enter>',self.QUITEnter)
         self.QUIT.bind('<Leave>',self.OnLeave)
 
-        # self.QUIT.grid(row = 0, column = 0, columnspan = 2)
-        self.QUIT.pack(side = LEFT)
+        self.QUIT.pack(side = LEFT, padx = 10, pady = 10)
 
     def CreateGraph(self):
         if axis.Tentry.get():
             self.Generate.config(state = 'disabled')
-            self.Generate.pack(side = LEFT)
+            self.Generate.pack(side = LEFT, padx = 10, pady = 10)
             filename = filedialog.asksaveasfilename(
                                         initialfile= 'results.html',
                                         defaultextension=".html",
@@ -220,8 +240,9 @@ class StatusFrame(Frame):
                         text = 'Help information .. ',
                         bd = 1,
                         relief = SUNKEN,
-                        anchor = W)
-        self.status.pack(side = LEFT, fill = X)
+                        anchor = NW,
+                        width = 400)
+        self.status.pack(side = LEFT)
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
@@ -231,7 +252,7 @@ class StatusFrame(Frame):
 root = Tk()
 
 root.title('Data Presenter')
-root.geometry("400x200")
+root.geometry("400x210")
 root.resizable(0, 0)
 
 top = TopFrame(master=root)
