@@ -122,9 +122,9 @@ class GraphFrame(Frame):
         self.Gmenu.bind('<Leave>',self.OnLeave)
         # view graph details
         self.Gmenu.configure(width = 10)
-        self.Glabel.grid(row = 1, column = 0, columnspan = 2,
+        self.Glabel.grid(row = 3, column = 0, columnspan = 2,
                         padx = 10, pady = 10)
-        self.Gmenu.grid(row = 2, column = 0, columnspan = 2,
+        self.Gmenu.grid(row = 4, column = 0, columnspan = 2,
                         padx = 10)
 
     def AxisSelection(self,data=NONE,Active=False):
@@ -137,6 +137,18 @@ class GraphFrame(Frame):
                             anchor = NE)
         # identify entry for graph title
         self.Tentry = Entry(self, width = 30)
+        # identify label for x axis title
+        self.XTlabel = Label(self,
+                            text = 'Enter X axis Name:',
+                            anchor = NE)
+        # identify entry for x axis title
+        self.XTentry = Entry(self, width = 30)
+        # identify label for y axis title
+        self.YTlabel = Label(self,
+                            text = 'Enter Y axis Name:',
+                            anchor = NE)
+        # identify entry for y axis title
+        self.YTentry = Entry(self, width = 30)
         # identify label for x axis options
         self.Xlabel = Label(self,
                             text = 'Select X axis:',
@@ -156,6 +168,10 @@ class GraphFrame(Frame):
         self.Ymenu.bind('<Leave>',self.OnLeave)
         self.Tentry.bind('<Enter>',self.TentryEnter)
         self.Tentry.bind('<Leave>',self.OnLeave)
+        self.XTentry.bind('<Enter>',self.XTentryEnter)
+        self.XTentry.bind('<Leave>',self.OnLeave)
+        self.YTentry.bind('<Enter>',self.YTentryEnter)
+        self.YTentry.bind('<Leave>',self.OnLeave)
         # configure axis details
         self.Xmenu.configure(width = 10)
         self.Ymenu.configure(width = 10)
@@ -165,12 +181,18 @@ class GraphFrame(Frame):
         self.Tlabel.grid(row = 0, column = 0, columnspan = 2,
                         padx = 10)
         self.Tentry.grid(row = 0, column = 2, columnspan = 4)
-        self.Xlabel.grid(row = 1, column = 2, columnspan = 2,
-                        pady = 10)
-        self.Xmenu.grid(row = 2, column = 2, columnspan = 2)
-        self.Ylabel.grid(row = 1, column = 4, columnspan = 2,
+        self.XTlabel.grid(row = 1, column = 0, columnspan = 2,
                         padx = 10, pady = 10)
-        self.Ymenu.grid(row = 2, column = 4, columnspan = 2,
+        self.XTentry.grid(row = 1, column = 2, columnspan = 4)
+        self.YTlabel.grid(row = 2, column = 0, columnspan = 2,
+                        padx = 10)
+        self.YTentry.grid(row = 2, column = 2, columnspan = 4)
+        self.Xlabel.grid(row = 3, column = 2, columnspan = 2,
+                        pady = 10)
+        self.Xmenu.grid(row = 4, column = 2, columnspan = 2)
+        self.Ylabel.grid(row = 3, column = 4, columnspan = 2,
+                        padx = 10, pady = 10)
+        self.Ymenu.grid(row = 4, column = 4, columnspan = 2,
                         padx = 10)
         # check if data imported or not
         if Active:
@@ -200,12 +222,12 @@ class GraphFrame(Frame):
             self.Ymenu.bind('<Enter>',self.YmenuEnter)
             self.Ymenu.bind('<Leave>',self.OnLeave)
             # view axis details
-            self.Xlabel.grid(row = 1, column = 2, columnspan = 2,
+            self.Xlabel.grid(row = 3, column = 2, columnspan = 2,
                             pady = 10)
-            self.Xmenu.grid(row = 2, column = 2, columnspan = 2)
-            self.Ylabel.grid(row = 1, column = 4, columnspan = 2,
+            self.Xmenu.grid(row = 4, column = 2, columnspan = 2)
+            self.Ylabel.grid(row = 3, column = 4, columnspan = 2,
                             padx = 10, pady = 10)
-            self.Ymenu.grid(row = 2, column = 4, columnspan = 2,
+            self.Ymenu.grid(row = 4, column = 4, columnspan = 2,
                             padx = 10)
             # create a self variable for the imported data
             self.data = data
@@ -232,7 +254,19 @@ class GraphFrame(Frame):
         '''
         Method for title entry entering mouse hover
         '''
-        status.status['text'] = 'Enter the title name you want to assign'
+        status.status['text'] = 'Enter the graph title name you want to assign'
+
+    def XTentryEnter(self, event):
+        '''
+        Method for x axis entry entering mouse hover
+        '''
+        status.status['text'] = 'Enter X-axis title name you want to assign'
+
+    def YTentryEnter(self, event):
+        '''
+        Method for y axis entry entering mouse hover
+        '''
+        status.status['text'] = 'Enter Y-axis title name you want to assign'
 
     def OnLeave(self, event):
         '''
@@ -295,7 +329,7 @@ class GenerateFrame(Frame):
         Method for creating results graph
         '''
         # check if graph title exists
-        if graph.Tentry.get():
+        if graph.Tentry.get() and graph.XTentry.get() and graph.YTentry.get():
             # disable generate button during generating
             self.Generate.config(state = 'disabled')
             # review generate button
@@ -311,9 +345,9 @@ class GenerateFrame(Frame):
             # get the graph type
             Gvalue = graph.Gvalue.get()
             # get x axis selected data
-            Xvalue = graph.Xvalue.get()
+            Xvalue = graph.XTentry.get()
             # get y axis selected data
-            Yvalue = graph.Yvalue.get()
+            Yvalue = graph.YTentry.get()
             # create options for handler script to create results file
             GraphOptions = {'type':Gvalue,
                             'x':[Xvalue],
@@ -332,7 +366,7 @@ class GenerateFrame(Frame):
             self.Generate.pack(side = LEFT)
         else:
             # give a message to enter the graph title
-            messagebox.showinfo("Attention","Please enter the graph title!")
+            messagebox.showinfo("Attention","Please enter the graph, X-axis and Y-axis titles!")
 
     def GenerateEnter(self, event):
         '''
@@ -399,7 +433,7 @@ root = Tk()
 # set the application title
 root.title('Data Presenter')
 # set application size
-root.geometry("400x210")
+root.geometry("400x270")
 # disable application resizing
 root.resizable(0, 0)
 
